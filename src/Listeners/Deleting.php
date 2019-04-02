@@ -2,7 +2,19 @@
 
 namespace Wildside\Userstamps\Listeners;
 
+use Tymon\JWTAuth\JWTAuth;
+
 class Deleting {
+
+    /**
+     * @var \Tymon\JWTAuth\JWTAuth
+     */
+    protected $jwt;
+
+    public function __construct(JWTAuth $jwt)
+    {
+        $this->jwt = $jwt;
+    }
 
     /**
      * When the model is being deleted.
@@ -17,7 +29,10 @@ class Deleting {
         }
 
         if (is_null($model -> {$model -> getDeletedByColumn()})) {
-            $model -> {$model -> getDeletedByColumn()} = auth() -> id();
+            // $model -> {$model -> getDeletedByColumn()} = auth() -> id();
+            if(!is_null($this->jwt->user())) {
+              $model -> {$model -> getUpdatedByColumn()} = $this->jwt->user()->id;
+            }
         }
 
         $dispatcher = $model -> getEventDispatcher();

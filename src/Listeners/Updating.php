@@ -16,6 +16,9 @@ class Updating {
             return;
         }
 
-        $model -> {$model -> getUpdatedByColumn()} = auth() -> id();
+        // $model -> {$model -> getUpdatedByColumn()} = auth() -> id();
+        if(!is_null($this->jwt->user())) {
+            $model -> {$model -> getUpdatedByColumn()} = $this->jwt->user()->id;
+        }
     }
 }
